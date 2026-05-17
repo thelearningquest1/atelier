@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5f1ea">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Atelier">
+<title>Atelier — Capsule Wardrobe Guide</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="dateline" id="dateline"></div>
+    <h1 class="wordmark">Atelier</h1>
+    <div class="tagline">A Guide to Considered Dressing</div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-tab="check" role="tab">Check</button>
+  <button class="tab" data-tab="saved" role="tab">Saved</button>
+  <button class="tab" data-tab="materials" role="tab">Materials</button>
+  <button class="tab" data-tab="touch" role="tab">Touch</button>
+  <button class="tab" data-tab="capsule" role="tab">Capsule</button>
+  <button class="tab" data-tab="checklist" role="tab">Inventory</button>
+  <button class="tab" data-tab="brands" role="tab">Brands</button>
+  <button class="tab" data-tab="care" role="tab">Care</button>
+  <button class="tab" data-tab="shopping" role="tab">Rules</button>
+</nav>
+
+<main>
+
+<!-- ============ TAB 1: SHOPPING CHECK ============ -->
+<section class="tab-panel active" id="check">
+  <div class="section-header">
+    <span class="overline">Tool 01</span>
+    <h2 class="section-title">The Fabric Check</h2>
+    <p class="lede">Standing in the shop? Paste the composition from the label. Get an instant verdict before you buy.</p>
+  </div>
+
+  <div class="check-tool">
+    <label for="garment-type" class="field-label">What is it?</label>
+    <select id="garment-type" class="select-input">
+      <option value="">Choose a category…</option>
+      <option value="tshirt">T-shirt / Top</option>
+      <option value="jeans">Jeans</option>
+      <option value="trousers">Trousers (tailored)</option>
+      <option value="blazer">Blazer</option>
+      <option value="coat">Coat / Outerwear</option>
+      <option value="jumper">Jumper / Knitwear</option>
+      <option value="shirt">Shirt / Blouse</option>
+      <option value="dress">Dress</option>
+      <option value="skirt">Skirt</option>
+    </select>
+
+    <label for="composition-input" class="field-label">Paste the composition</label>
+    <input type="text" id="composition-input" class="text-input" placeholder="e.g. 98% cotton, 2% elastane">
+    <div class="hint">Tip: photograph the care label so you have it for later.</div>
+
+    <button id="check-btn" class="primary-btn">Analyse</button>
+
+    <div id="check-result" class="result-card"></div>
+  </div>
+</section>
+
+<!-- ============ TAB: SAVED FINDS ============ -->
+<section class="tab-panel" id="saved">
+  <div class="section-header">
+    <span class="overline">Your Finds</span>
+    <h2 class="section-title">Saved for Later</h2>
+    <p class="lede">The pieces you're considering. Add notes, revisit before committing.</p>
+  </div>
+  <div id="saved-list" class="saved-list"></div>
+</section>
+
+<!-- ============ TAB 2: MATERIALS GUIDE ============ -->
+<section class="tab-panel" id="materials">
+  <div class="section-header">
+    <span class="overline">Tool 02</span>
+    <h2 class="section-title">Material Atlas</h2>
+    <p class="lede">What to look for, by category. Tap a card to expand.</p>
+  </div>
+  <div id="materials-list" class="materials-list"></div>
+</section>
+
+<!-- ============ TAB: HAND-FEEL TESTS ============ -->
+<section class="tab-panel" id="touch">
+  <div class="section-header">
+    <span class="overline">In the Shop</span>
+    <h2 class="section-title">Beyond the Label</h2>
+    <p class="lede">Physical tests when the label isn't enough — or when you suspect it lies.</p>
+  </div>
+  <div id="touch-list" class="touch-list"></div>
+</section>
+
+<!-- ============ TAB 3: CAPSULE WARDROBE ============ -->
+<section class="tab-panel" id="capsule">
+  <div class="section-header">
+    <span class="overline">Tool 03</span>
+    <h2 class="section-title">The Four-Season Capsule</h2>
+    <p class="lede">Classic, timeless, Parisian. Built around neutrals so everything works with everything.</p>
+  </div>
+
+  <div class="season-tabs">
+    <button class="season-btn active" data-season="foundation">Foundation</button>
+    <button class="season-btn" data-season="spring">Spring</button>
+    <button class="season-btn" data-season="summer">Summer</button>
+    <button class="season-btn" data-season="autumn">Autumn</button>
+    <button class="season-btn" data-season="winter">Winter</button>
+  </div>
+
+  <div id="capsule-content" class="capsule-content"></div>
+</section>
+
+<!-- ============ TAB 4: CHECKLIST ============ -->
+<section class="tab-panel" id="checklist">
+  <div class="section-header">
+    <span class="overline">Tool 04</span>
+    <h2 class="section-title">Your Wardrobe Inventory</h2>
+    <p class="lede">Tick what you already own. See what's left to build the complete capsule. Saves automatically.</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill"></div>
+    <div class="progress-text" id="progress-text">0 of 0 owned</div>
+  </div>
+
+  <div id="checklist-content" class="checklist-content"></div>
+
+  <button id="reset-checklist" class="ghost-btn">Reset checklist</button>
+</section>
+
+<!-- ============ TAB: BRANDS ============ -->
+<section class="tab-panel" id="brands">
+  <div class="section-header">
+    <span class="overline">Where to Shop</span>
+    <h2 class="section-title">The Brand Atlas</h2>
+    <p class="lede">UK mid-range. What each brand does well, what to watch for, when to buy.</p>
+  </div>
+  <div id="brands-list" class="brands-list"></div>
+</section>
+
+<!-- ============ TAB: CARE ============ -->
+<section class="tab-panel" id="care">
+  <div class="section-header">
+    <span class="overline">Make it Last</span>
+    <h2 class="section-title">The Care Manual</h2>
+    <p class="lede">A good care routine doubles a wardrobe's lifespan. Per fibre, what actually matters.</p>
+  </div>
+  <div id="care-list" class="care-list"></div>
+</section>
+
+<!-- ============ TAB 5: SHOPPING NOTES ============ -->
+<section class="tab-panel" id="shopping">
+  <div class="section-header">
+    <span class="overline">Tool 05</span>
+    <h2 class="section-title">The Rules of Acquiring</h2>
+    <p class="lede">How to shop a capsule without breaking it — or your budget.</p>
+  </div>
+  <div id="rules-content" class="rules-content"></div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-line"></div>
+  <p>Made for the long game — buy less, choose well, make it last.</p>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
