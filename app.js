@@ -1,7 +1,7 @@
 // ============================================
 // ATELIER — App Logic
 // ============================================
-
+ 
 // ---------- DATELINE ----------
 (function setDateline() {
   const d = new Date();
@@ -10,7 +10,7 @@
   const dateline = `Vol. I  ·  ${months[d.getMonth()]} ${d.getFullYear()}  ·  London Edition`;
   document.getElementById('dateline').textContent = dateline;
 })();
-
+ 
 // ---------- TAB SWITCHING ----------
 document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -18,14 +18,16 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById(tab.dataset.tab).classList.add('active');
+    // Centre the tapped tab in view so users on narrow screens can always see it
+    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 });
-
+ 
 // ============================================
 // TOOL 1: FABRIC CHECK
 // ============================================
-
+ 
 function parseComposition(input) {
   const text = input.toLowerCase().trim();
   // Match: "98% cotton, 2% elastane" or "98 cotton 2 elastane" etc.
@@ -41,7 +43,7 @@ function parseComposition(input) {
   }
   return matches;
 }
-
+ 
 function classifyFibre(fibre) {
   const data = FIBRES[fibre];
   if (!data) return 'unknown';
@@ -50,7 +52,7 @@ function classifyFibre(fibre) {
   if (data.type === 'synthetic') return 'poor';
   return 'unknown';
 }
-
+ 
 function analyseComposition(garmentType, fibres) {
   if (fibres.length === 0) {
     return {
@@ -60,7 +62,7 @@ function analyseComposition(garmentType, fibres) {
       breakdown: []
     };
   }
-
+ 
   const total = fibres.reduce((s, f) => s + f.pct, 0);
   if (total < 90 || total > 105) {
     return {
@@ -70,7 +72,7 @@ function analyseComposition(garmentType, fibres) {
       breakdown: fibres.map(f => ({ name: f.raw, pct: f.pct, tag: 'neutral' }))
     };
   }
-
+ 
   // Sum by classification
   let naturalPct = 0, syntheticPct = 0, stretchPct = 0, cellulosicPct = 0;
   const breakdown = fibres.map(f => {
@@ -83,32 +85,32 @@ function analyseComposition(garmentType, fibres) {
     else if (data.type === 'cellulosic') cellulosicPct += f.pct;
     else if (data.type === 'stretch') stretchPct += f.pct;
     else if (data.type === 'synthetic') syntheticPct += f.pct;
-
+ 
     let tag = 'neutral';
     if (cls === 'good') tag = 'good';
     else if (cls === 'poor') tag = 'poor';
     return { name: prettyName(f.normalised, f.raw), pct: f.pct, tag };
   });
-
+ 
   const naturalishPct = naturalPct + cellulosicPct;
   const fibreNames = fibres.map(f => f.normalised).filter(Boolean);
-
+ 
   // Garment-specific analysis
   return judgeForGarment(garmentType, {
     naturalPct, syntheticPct, stretchPct, cellulosicPct, naturalishPct,
     fibres: fibreNames, breakdown, raw: fibres
   });
 }
-
+ 
 function prettyName(normalised, raw) {
   if (!normalised) return capitalise(raw);
   return normalised.split('_').map(capitalise).join(' ');
 }
-
+ 
 function capitalise(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
-
+ 
 function judgeForGarment(type, data) {
   const { naturalPct, syntheticPct, stretchPct, naturalishPct, fibres, breakdown } = data;
   const hasAcrylic = fibres.includes('acrylic');
@@ -119,9 +121,9 @@ function judgeForGarment(type, data) {
   const hasCotton = fibres.some(f => f && f.includes('cotton'));
   const hasLinen = fibres.includes('linen') || fibres.includes('hemp');
   const hasSilk = fibres.includes('silk');
-
+ 
   let verdict, title, reasoning = [];
-
+ 
   switch (type) {
     case 'tshirt':
       if (naturalishPct >= 95 && hasCotton && stretchPct === 0) {
@@ -148,7 +150,7 @@ function judgeForGarment(type, data) {
         reasoning.push('It will do the job but won\'t age as well as a cotton-dominant tee.');
       }
       break;
-
+ 
     case 'jeans':
       const totalStretch = stretchPct + (fibres.includes('polyester') ? data.raw.find(f => f.normalised === 'polyester')?.pct || 0 : 0);
       if (hasCotton && stretchPct >= 1 && stretchPct <= 3 && naturalishPct >= 95) {
@@ -182,7 +184,7 @@ function judgeForGarment(type, data) {
         reasoning.push('Cotton-dominant denim with small stretch is the sweet spot — this is close but not perfect.');
       }
       break;
-
+ 
     case 'trousers':
       if (hasWool && naturalishPct >= 90) {
         verdict = 'excellent';
@@ -211,7 +213,7 @@ function judgeForGarment(type, data) {
         reasoning.push('Workable composition but not what you\'d call a long-life piece.');
       }
       break;
-
+ 
     case 'blazer':
       if (hasWool && naturalishPct >= 95) {
         verdict = 'excellent';
@@ -241,7 +243,7 @@ function judgeForGarment(type, data) {
         title = 'Workable but not ideal.';
       }
       break;
-
+ 
     case 'coat':
       if (hasWool && naturalishPct >= 80) {
         verdict = 'excellent';
@@ -268,7 +270,7 @@ function judgeForGarment(type, data) {
         title = 'Borderline.';
       }
       break;
-
+ 
     case 'jumper':
       if (hasAcrylic) {
         verdict = 'poor';
@@ -302,7 +304,7 @@ function judgeForGarment(type, data) {
         reasoning.push('Check for acrylic specifically — it\'s the biggest predictor of pilling.');
       }
       break;
-
+ 
     case 'shirt':
       if (hasCotton && naturalishPct >= 95) {
         verdict = 'excellent';
@@ -325,7 +327,7 @@ function judgeForGarment(type, data) {
         title = 'Acceptable.';
       }
       break;
-
+ 
     case 'dress':
       if (hasSilk || (hasWool && naturalishPct >= 80) || (hasCotton && naturalishPct >= 90) || hasLinen) {
         verdict = 'excellent';
@@ -344,7 +346,7 @@ function judgeForGarment(type, data) {
         title = 'Borderline.';
       }
       break;
-
+ 
     case 'skirt':
       if (hasWool || (hasCotton && naturalishPct >= 90) || hasSilk || hasLinen) {
         verdict = 'excellent';
@@ -362,21 +364,21 @@ function judgeForGarment(type, data) {
         title = 'Borderline.';
       }
       break;
-
+ 
     default:
       if (naturalishPct >= 80) { verdict = 'good'; title = 'Mostly natural — a solid choice.'; }
       else if (syntheticPct >= 50) { verdict = 'poor'; title = 'Heavily synthetic.'; }
       else { verdict = 'okay'; title = 'Mixed composition.'; }
   }
-
+ 
   return { verdict, title, reasoning, breakdown };
 }
-
+ 
 document.getElementById('check-btn').addEventListener('click', () => {
   const garment = document.getElementById('garment-type').value;
   const composition = document.getElementById('composition-input').value;
   const resultEl = document.getElementById('check-result');
-
+ 
   if (!garment) {
     resultEl.className = 'result-card verdict-poor';
     resultEl.innerHTML = '<div class="verdict-label">Missing</div><div class="verdict-title">Choose a garment type first.</div>';
@@ -387,12 +389,12 @@ document.getElementById('check-btn').addEventListener('click', () => {
     resultEl.innerHTML = '<div class="verdict-label">Missing</div><div class="verdict-title">Paste the composition.</div><div class="verdict-body">e.g. <em>98% cotton, 2% elastane</em></div>';
     return;
   }
-
+ 
   const fibres = parseComposition(composition);
   const result = analyseComposition(garment, fibres);
   renderResult(result);
 });
-
+ 
 function renderResult(result) {
   const verdictLabels = {
     excellent: 'Buy it',
@@ -432,7 +434,7 @@ function renderResult(result) {
     `;
   }
   resultEl.innerHTML = html;
-
+ 
   // Wire up save button if present
   const saveBtn = document.getElementById('save-find-btn');
   if (saveBtn) {
@@ -456,7 +458,7 @@ function renderResult(result) {
     });
   }
 }
-
+ 
 // ============================================
 // TOOL 2: MATERIALS LIST
 // ============================================
@@ -497,7 +499,7 @@ function renderMaterials() {
     `;
   });
   container.innerHTML = html;
-
+ 
   document.querySelectorAll('.material-card').forEach(card => {
     card.querySelector('.material-header').addEventListener('click', () => {
       card.classList.toggle('open');
@@ -505,12 +507,12 @@ function renderMaterials() {
   });
 }
 renderMaterials();
-
+ 
 // ============================================
 // TOOL 3: CAPSULE
 // ============================================
 let currentSeason = 'foundation';
-
+ 
 function renderCapsule(season) {
   const data = CAPSULE[season];
   const container = document.getElementById('capsule-content');
@@ -536,7 +538,7 @@ function renderCapsule(season) {
   });
   container.innerHTML = html;
 }
-
+ 
 document.querySelectorAll('.season-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
@@ -546,11 +548,11 @@ document.querySelectorAll('.season-btn').forEach(btn => {
   });
 });
 renderCapsule('foundation');
-
+ 
 // ============================================
 // TOOL 4: CHECKLIST (with localStorage)
 // ============================================
-
+ 
 function getAllItems() {
   const items = [];
   Object.entries(CAPSULE).forEach(([seasonKey, season]) => {
@@ -568,24 +570,24 @@ function getAllItems() {
   });
   return items;
 }
-
+ 
 function loadChecked() {
   try {
     return JSON.parse(localStorage.getItem('atelier-checklist') || '{}');
   } catch { return {}; }
 }
-
+ 
 function saveChecked(state) {
   try {
     localStorage.setItem('atelier-checklist', JSON.stringify(state));
   } catch {}
 }
-
+ 
 function renderChecklist() {
   const allItems = getAllItems();
   const checked = loadChecked();
   const container = document.getElementById('checklist-content');
-
+ 
   // Group by season
   const seasonNames = {
     foundation: 'Foundation (year-round)',
@@ -600,7 +602,7 @@ function renderChecklist() {
     if (!grouped[item.season][item.category]) grouped[item.season][item.category] = [];
     grouped[item.season][item.category].push(item);
   });
-
+ 
   let html = '';
   Object.entries(grouped).forEach(([seasonKey, cats]) => {
     html += `<div class="checklist-category">`;
@@ -620,7 +622,7 @@ function renderChecklist() {
     html += `</div>`;
   });
   container.innerHTML = html;
-
+ 
   // Wire up checks
   document.querySelectorAll('.check-item').forEach(el => {
     el.addEventListener('click', () => {
@@ -635,7 +637,7 @@ function renderChecklist() {
   });
   updateProgress();
 }
-
+ 
 function updateProgress() {
   const all = getAllItems();
   const checked = loadChecked();
@@ -645,16 +647,16 @@ function updateProgress() {
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('progress-text').textContent = `${checkedCount} of ${totalCount} owned · ${pct}%`;
 }
-
+ 
 document.getElementById('reset-checklist').addEventListener('click', () => {
   if (confirm('Clear all ticks and start over?')) {
     saveChecked({});
     renderChecklist();
   }
 });
-
+ 
 renderChecklist();
-
+ 
 // ============================================
 // TOOL 5: RULES
 // ============================================
@@ -669,7 +671,7 @@ function renderRules() {
   `).join('');
 }
 renderRules();
-
+ 
 // ============================================
 // SAVED FINDS (localStorage)
 // ============================================
@@ -678,26 +680,26 @@ function loadSavedFinds() {
     return JSON.parse(localStorage.getItem('atelier-finds') || '[]');
   } catch { return []; }
 }
-
+ 
 function persistFinds(finds) {
   try {
     localStorage.setItem('atelier-finds', JSON.stringify(finds));
   } catch {}
 }
-
+ 
 function saveFind(find) {
   const finds = loadSavedFinds();
   finds.unshift(find); // newest first
   persistFinds(finds);
   renderSavedFinds();
 }
-
+ 
 function deleteFind(id) {
   const finds = loadSavedFinds().filter(f => f.id !== id);
   persistFinds(finds);
   renderSavedFinds();
 }
-
+ 
 function renderSavedFinds() {
   const container = document.getElementById('saved-list');
   const finds = loadSavedFinds();
@@ -739,7 +741,7 @@ function renderSavedFinds() {
   });
 }
 renderSavedFinds();
-
+ 
 // ============================================
 // HAND-FEEL TESTS
 // ============================================
@@ -761,7 +763,7 @@ function renderTouchTests() {
   `).join('');
 }
 renderTouchTests();
-
+ 
 // ============================================
 // BRANDS
 // ============================================
@@ -810,7 +812,7 @@ function renderBrands() {
   });
 }
 renderBrands();
-
+ 
 // ============================================
 // CARE GUIDE
 // ============================================
@@ -855,3 +857,4 @@ function renderCare() {
   });
 }
 renderCare();
+ 
