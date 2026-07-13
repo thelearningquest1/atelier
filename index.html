@@ -28,6 +28,7 @@
   <button class="tab active" data-tab="check" role="tab">Check</button>
   <button class="tab" data-tab="saved" role="tab">Saved</button>
   <button class="tab" data-tab="materials" role="tab">Materials</button>
+  <button class="tab" data-tab="fibres" role="tab">Fibres</button>
   <button class="tab" data-tab="touch" role="tab">Touch</button>
   <button class="tab" data-tab="capsule" role="tab">Capsule</button>
   <button class="tab" data-tab="checklist" role="tab">Inventory</button>
@@ -48,23 +49,32 @@
   </div>
  
   <div class="check-tool">
+    <label class="field-label">Who's it for?</label>
+    <div class="gender-tabs" role="tablist">
+      <button type="button" class="gender-btn active" data-gender="all" role="tab">All</button>
+      <button type="button" class="gender-btn" data-gender="women" role="tab">Women</button>
+      <button type="button" class="gender-btn" data-gender="men" role="tab">Men</button>
+    </div>
+ 
     <label for="garment-type" class="field-label">What is it?</label>
     <select id="garment-type" class="select-input">
       <option value="">Choose a category…</option>
-      <option value="tshirt">T-shirt / Top</option>
-      <option value="jeans">Jeans</option>
-      <option value="trousers">Trousers (tailored)</option>
-      <option value="blazer">Blazer</option>
-      <option value="coat">Coat / Outerwear</option>
-      <option value="jumper">Jumper / Knitwear</option>
-      <option value="shirt">Shirt / Blouse</option>
-      <option value="dress">Dress</option>
-      <option value="skirt">Skirt</option>
     </select>
  
     <label for="composition-input" class="field-label">Paste the composition</label>
     <input type="text" id="composition-input" class="text-input" placeholder="e.g. 98% cotton, 2% elastane">
     <div class="hint">Tip: photograph the care label so you have it for later.</div>
+ 
+    <div class="examples">
+      <span class="examples-label">Try one</span>
+      <div class="example-chips">
+        <button type="button" class="example-chip" data-fill="98% cotton, 2% elastane">98% cotton, 2% elastane</button>
+        <button type="button" class="example-chip" data-fill="100% linen">100% linen</button>
+        <button type="button" class="example-chip" data-fill="80% wool, 20% polyester">80% wool, 20% polyester</button>
+        <button type="button" class="example-chip" data-fill="100% polyester">100% polyester</button>
+        <button type="button" class="example-chip" data-fill="55% linen, 45% cotton">55% linen, 45% cotton</button>
+      </div>
+    </div>
  
     <button id="check-btn" class="primary-btn">Analyse</button>
  
@@ -90,6 +100,16 @@
     <p class="lede">What to look for, by category. Tap a card to expand.</p>
   </div>
   <div id="materials-list" class="materials-list"></div>
+</section>
+ 
+<!-- ============ TAB: FIBRE INDEX ============ -->
+<section class="tab-panel" id="fibres">
+  <div class="section-header">
+    <span class="overline">Reference</span>
+    <h2 class="section-title">The Fibre Index</h2>
+    <p class="lede">Every fibre, honestly assessed — what it is, what it does well, and where it lets you down.</p>
+  </div>
+  <div id="fibres-list" class="care-list"></div>
 </section>
  
 <!-- ============ TAB: HAND-FEEL TESTS ============ -->
@@ -156,6 +176,13 @@
     <h2 class="section-title">The Care Manual</h2>
     <p class="lede">A good care routine doubles a wardrobe's lifespan. Per fibre, what actually matters.</p>
   </div>
+ 
+  <div class="symbol-key">
+    <div class="symbol-key-title">Reading the Care Label</div>
+    <div class="symbol-key-intro">The symbols found on every care label, decoded. A crossed-out symbol always means "don't".</div>
+    <div id="care-symbols"></div>
+  </div>
+ 
   <div id="care-list" class="care-list"></div>
 </section>
  
@@ -174,7 +201,7 @@
 <footer>
   <div class="footer-line"></div>
   <p>Made for the long game — buy less, choose well, make it last.</p>
-  <p style="font-family: var(--sans); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); margin-top: 0.75rem;">Version 1.1 · updated July 2026</p>
+  <p style="font-family: var(--sans); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint); margin-top: 0.75rem;">Version 1.9 · care-label decoder · July 2026</p>
 </footer>
  
 <script src="data.js"></script>
